@@ -48,6 +48,47 @@ const collectibles = [
     }
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`Server is running on http://localhost:${port}`);
+// });
+
+//4. Filter Shoes by Query Parameters
+
+const shoes = [
+    { name: "Birkenstocks", price: 50, type: "sandal" },
+    { name: "Air Jordans", price: 500, type: "sneaker" },
+    { name: "Air Mahomeses", price: 501, type: "sneaker" },
+    { name: "Utility Boots", price: 20, type: "boot" },
+    { name: "Velcro Sandals", price: 15, type: "sandal" },
+    { name: "Jet Boots", price: 1000, type: "boot" },
+    { name: "Fifty-Inch Heels", price: 175, type: "heel" }
+];
+
+app.get('/shoes', (req, res) => {
+    let filteredShoes = shoes;
+
+    if (req.query['min-price']) {
+        const minPrice = Number(req.query['min-price']);
+        filteredShoes = filteredShoes.filter(shoe => shoe.price >= minPrice);
+    }
+
+    if (req.query['max-price']) {
+        const maxPrice = Number(req.query['max-price']);
+        filteredShoes = filteredShoes.filter(shoe => shoe.price <= maxPrice);
+    }
+
+    if (req.query.type) {
+        const type = req.query.type.toLowerCase();
+        filteredShoes = filteredShoes.filter(shoe => shoe.type.toLowerCase() === type);
+      }
+    
+      const output = filteredShoes.map(shoe => 
+        `Name: ${shoe.name}<br>Price: $${shoe.price}<br>Type: ${shoe.type}`
+      ).join('<br><br>');      
+    
+      res.send(output); // Sending as plain text
+    });
+
+    app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}`);
+    });
