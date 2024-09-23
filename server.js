@@ -26,9 +26,9 @@ app.get('/roll/:number',(req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`Server is running on http://localhost:${port}`);
+// });
 
 // 3. I Want THAT One!
 const collectibles = [
@@ -39,6 +39,15 @@ const collectibles = [
 
   app.get('/collectibles/:index', (req, res) => {
     const index = Number(req.params.index);
-  });
 
-  
+    if(index < 0 || index >= collectibles.length || isNaN(index)) {
+        res.send('This item is not yet in stock. Check back soon!');
+    } else {
+        const item = collectibles[index];
+        res.send(`So, you want the ${item.name}? For ${item.price}, it can be yours!`);
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
